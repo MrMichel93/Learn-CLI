@@ -1,5 +1,5 @@
 # Learn-CLI
-Learn about and how to use the CLI to take full advantage of your computer.
+Learn about and how to use the CLI to take full advantage of your computer. Master essential command-line skills through comprehensive tutorials and practical exercises.
 
 ## Table of Contents
 1. [Introduction to the CLI](#1-introduction-to-the-cli)
@@ -864,11 +864,20 @@ $ ltrace command                             # Trace library calls
 
 #### Bash Debugging
 ```bash
-$ bash -x script.sh                          # Debug mode
-$ set -x                                     # Enable debugging
-$ set +x                                     # Disable debugging
-$ set -e                                     # Exit on error
-$ set -u                                     # Exit on undefined variable
+$ bash -x script.sh                          # Debug mode (show each command)
+$ set -x                                     # Enable debugging in script
+$ set +x                                     # Disable debugging in script
+$ set -e                                     # Exit immediately on error (fail fast)
+$ set -u                                     # Exit on undefined variable usage
+$ set -o pipefail                            # Return error if any pipeline command fails
+```
+
+Common debugging practice:
+```bash
+#!/bin/bash
+set -euo pipefail  # Strict mode: exit on error, undefined vars, pipe failures
+
+# Your script here
 ```
 
 ### Performance and Monitoring
@@ -921,13 +930,45 @@ $ brew search package_name                   # Search packages
 $ brew list                                  # List installed packages
 ```
 
+### Scheduling Tasks with Cron
+
+Cron allows you to schedule commands to run automatically at specified times.
+
+```bash
+$ crontab -e                                 # Edit cron jobs
+$ crontab -l                                 # List cron jobs
+$ crontab -r                                 # Remove all cron jobs
+```
+
+Cron syntax: `minute hour day month weekday command`
+```
+# Example cron entries:
+0 0 * * * /path/to/backup.sh                 # Daily at midnight
+30 2 * * 0 /path/to/weekly.sh                # Weekly on Sunday at 2:30 AM
+0 */6 * * * /path/to/script.sh               # Every 6 hours
+*/15 * * * * /path/to/monitor.sh             # Every 15 minutes
+0 9 1 * * /path/to/monthly.sh                # First day of month at 9 AM
+```
+
+### Working with JSON Data
+
+#### `jq` - JSON Processor
+Parse and manipulate JSON data from APIs and files.
+```bash
+$ curl api.example.com/data | jq '.'         # Pretty-print JSON
+$ echo '{"name":"John","age":30}' | jq '.name'  # Extract field
+$ jq '.[] | .name' data.json                 # Array processing
+$ jq '.users[] | select(.age > 25)' data.json   # Filter data
+$ jq -r '.name' data.json                    # Raw output (no quotes)
+```
+
 ### Advanced Practice Exercises
 
 1. Write a script that backs up a directory, compresses it, and names it with the current date
 2. Create a log monitoring script that alerts when specific error patterns appear
 3. Write a script that finds and removes duplicate files based on content (using checksums)
-4. Set up a cron job to run a maintenance script daily at midnight
-5. Create a function to parse and format JSON data from a REST API using `curl` and `jq`
+4. Set up a cron job to run a maintenance script daily at midnight (e.g., `0 0 * * * /path/to/script.sh`)
+5. Use `curl` and `jq` to parse JSON data from a REST API and extract specific fields
 6. Write a script that monitors system resources and sends an alert when usage exceeds thresholds
 7. Build a deployment script that syncs files to remote servers with error handling
 
